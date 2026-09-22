@@ -17,20 +17,20 @@ export class LiffService {
     return liff.isLoggedIn();
   }
 
-  login(): void {
-    liff.login();
+  isInClient(): boolean {
+    return liff.isInClient();
   }
 
-  getIdToken(): string | null {
-    return liff.getIDToken();
+  login(): void {
+    liff.login();
   }
 
   async getProfile() {
     return liff.getProfile();
   }
 
-  isInClient(): boolean {
-    return liff.isInClient();
+  getIdToken(): string | null {
+    return liff.getIDToken();
   }
 
   closeWindow(): void {
