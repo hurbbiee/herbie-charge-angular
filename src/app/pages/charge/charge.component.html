@@ -1,0 +1,207 @@
+<main
+  class="min-h-screen bg-slate-100 px-4 py-6"
+>
+  <div class="mx-auto max-w-md">
+    <section
+      class="rounded-3xl bg-white p-5 shadow-sm"
+    >
+      <!-- Header -->
+      <div>
+        <h1
+          class="text-xl font-bold text-slate-900"
+        >
+          เติมเครดิต
+        </h1>
+
+        <p
+          class="mt-1 text-sm text-slate-500"
+        >
+          เลือกจำนวนเงินที่ต้องการเติม
+        </p>
+      </div>
+
+      <!-- Credit -->
+      <div
+        class="
+          mt-5
+          rounded-3xl
+          bg-emerald-500
+          p-5
+          text-white
+        "
+      >
+        <p
+          class="text-sm text-emerald-50"
+        >
+          เครดิตคงเหลือ
+        </p>
+
+        <div
+          class="mt-2 flex items-end gap-2"
+        >
+          <strong
+            class="text-4xl font-bold"
+          >
+            100.00
+          </strong>
+
+          <span class="pb-1 text-sm">
+            บาท
+          </span>
+        </div>
+
+        <div
+          class="
+            mt-4
+            border-t
+            border-white/20
+            pt-3
+          "
+        >
+          <p
+            class="text-sm text-emerald-50"
+          >
+            เบอร์โทรศัพท์
+            099 999 9999
+          </p>
+        </div>
+      </div>
+
+      <!-- Amount title -->
+      <div class="mt-6">
+        <h2
+          class="font-semibold text-slate-900"
+        >
+          เติมเงินเพื่อเพิ่มยอดเครดิต
+        </h2>
+
+        <p
+          class="mt-1 text-sm text-slate-500"
+        >
+          เลือกจำนวนเงินที่ต้องการเติม
+        </p>
+      </div>
+
+      <!-- Amount buttons -->
+      <div
+        class="
+          mt-4
+          grid
+          grid-cols-2
+          gap-3
+        "
+      >
+        @for (
+          amount of amounts;
+          track amount
+        ) {
+          <button
+            type="button"
+            (click)="selectAmount(amount)"
+            class="
+              rounded-xl
+              border
+              px-4
+              py-3
+              font-semibold
+              transition
+              duration-200
+            "
+            [class.border-emerald-700]="
+              selectedAmount === amount
+            "
+            [class.bg-emerald-700]="
+              selectedAmount === amount
+            "
+            [class.text-white]="
+              selectedAmount === amount
+            "
+            [class.border-slate-300]="
+              selectedAmount !== amount
+            "
+            [class.bg-white]="
+              selectedAmount !== amount
+            "
+            [class.text-slate-700]="
+              selectedAmount !== amount
+            "
+          >
+            ฿ {{ amount }}
+          </button>
+        }
+      </div>
+
+      <!-- Selected -->
+      @if (selectedAmount !== null) {
+        <div
+          class="
+            mt-5
+            rounded-xl
+            bg-emerald-50
+            p-3
+          "
+        >
+          <p
+            class="text-sm text-emerald-800"
+          >
+            จำนวนเงินที่เลือก
+          </p>
+
+          <p
+            class="
+              mt-1
+              text-lg
+              font-bold
+              text-emerald-900
+            "
+          >
+            ฿ {{ selectedAmount }}
+          </p>
+        </div>
+      }
+
+      <!-- Confirm -->
+      <button
+        type="button"
+        (click)="confirm()"
+        [disabled]="selectedAmount === null"
+        class="
+          mt-6
+          w-full
+          rounded-xl
+          bg-emerald-500
+          py-3
+          font-semibold
+          text-white
+          transition
+          hover:bg-emerald-600
+          disabled:cursor-not-allowed
+          disabled:opacity-40
+        "
+      >
+        ยืนยัน
+      </button>
+
+      <!-- Back -->
+      <button
+        type="button"
+        (click)="goBack()"
+        class="
+          mt-3
+          w-full
+          rounded-xl
+          border
+          border-slate-300
+          bg-white
+          py-3
+          font-semibold
+          text-slate-700
+          transition
+          hover:bg-slate-50
+        "
+      >
+        ย้อนกลับ
+      </button>
+    </section>
+  </div>
+</main>
