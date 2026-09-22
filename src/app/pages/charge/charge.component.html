@@ -1,26 +1,65 @@
-<main
-  class="min-h-screen bg-slate-100 px-4 py-6"
->
+<main class="min-h-screen bg-slate-100 px-4 py-6">
   <div class="mx-auto max-w-md">
-    <section
-      class="rounded-3xl bg-white p-5 shadow-sm"
-    >
+    <section class="rounded-3xl bg-white p-5 shadow-sm">
       <!-- Header -->
       <div>
-        <h1
-          class="text-xl font-bold text-slate-900"
-        >
+        <h1 class="text-2xl font-bold text-slate-900">
           เติมเครดิต
         </h1>
 
-        <p
-          class="mt-1 text-sm text-slate-500"
-        >
-          เลือกจำนวนเงินที่ต้องการเติม
-        </p>
+        @if (userName) {
+          <p class="mt-1 text-sm text-slate-500">
+            สวัสดี {{ userName }}
+          </p>
+        } @else {
+          <p class="mt-1 text-sm text-slate-500">
+            เลือกจำนวนเงินที่ต้องการเติม
+          </p>
+        }
       </div>
 
-      <!-- Credit -->
+      <!-- LIFF debug status -->
+      <div
+        class="
+          mt-4
+          rounded-xl
+          border
+          border-slate-200
+          bg-slate-50
+          px-4
+          py-3
+        "
+      >
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-slate-500">
+            LIFF Status
+          </span>
+
+          <span
+            class="text-sm font-semibold"
+            [class.text-emerald-600]="isLiffReady"
+            [class.text-amber-600]="!isLiffReady"
+          >
+            {{ isLiffReady ? 'Ready' : 'Loading...' }}
+          </span>
+        </div>
+
+        <div class="mt-2 flex items-center justify-between">
+          <span class="text-sm text-slate-500">
+            เปิดผ่าน LINE
+          </span>
+
+          <span
+            class="text-sm font-semibold"
+            [class.text-emerald-600]="isInLine"
+            [class.text-slate-500]="!isInLine"
+          >
+            {{ isInLine ? 'Yes' : 'No' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Credit card -->
       <div
         class="
           mt-5
@@ -30,18 +69,12 @@
           text-white
         "
       >
-        <p
-          class="text-sm text-emerald-50"
-        >
+        <p class="text-sm text-emerald-50">
           เครดิตคงเหลือ
         </p>
 
-        <div
-          class="mt-2 flex items-end gap-2"
-        >
-          <strong
-            class="text-4xl font-bold"
-          >
+        <div class="mt-2 flex items-end gap-2">
+          <strong class="text-4xl font-bold">
             100.00
           </strong>
 
@@ -58,39 +91,26 @@
             pt-3
           "
         >
-          <p
-            class="text-sm text-emerald-50"
-          >
+          <p class="text-sm text-emerald-50">
             เบอร์โทรศัพท์
             099 999 9999
           </p>
         </div>
       </div>
 
-      <!-- Amount title -->
+      <!-- Amount section -->
       <div class="mt-6">
-        <h2
-          class="font-semibold text-slate-900"
-        >
+        <h2 class="font-semibold text-slate-900">
           เติมเงินเพื่อเพิ่มยอดเครดิต
         </h2>
 
-        <p
-          class="mt-1 text-sm text-slate-500"
-        >
+        <p class="mt-1 text-sm text-slate-500">
           เลือกจำนวนเงินที่ต้องการเติม
         </p>
       </div>
 
       <!-- Amount buttons -->
-      <div
-        class="
-          mt-4
-          grid
-          grid-cols-2
-          gap-3
-        "
-      >
+      <div class="mt-4 grid grid-cols-2 gap-3">
         @for (
           amount of amounts;
           track amount
@@ -131,26 +151,24 @@
         }
       </div>
 
-      <!-- Selected -->
+      <!-- Selected amount -->
       @if (selectedAmount !== null) {
         <div
           class="
             mt-5
-            rounded-xl
+            rounded-2xl
             bg-emerald-50
-            p-3
+            p-4
           "
         >
-          <p
-            class="text-sm text-emerald-800"
-          >
+          <p class="text-sm text-emerald-800">
             จำนวนเงินที่เลือก
           </p>
 
           <p
             class="
               mt-1
-              text-lg
+              text-xl
               font-bold
               text-emerald-900
             "
@@ -160,11 +178,14 @@
         </div>
       }
 
-      <!-- Confirm -->
+      <!-- Confirm button -->
       <button
         type="button"
         (click)="confirm()"
-        [disabled]="selectedAmount === null"
+        [disabled]="
+          selectedAmount === null ||
+          !isLiffReady
+        "
         class="
           mt-6
           w-full
@@ -174,6 +195,7 @@
           font-semibold
           text-white
           transition
+          duration-200
           hover:bg-emerald-600
           disabled:cursor-not-allowed
           disabled:opacity-40
@@ -182,7 +204,7 @@
         ยืนยัน
       </button>
 
-      <!-- Back -->
+      <!-- Back button -->
       <button
         type="button"
         (click)="goBack()"
@@ -197,11 +219,24 @@
           font-semibold
           text-slate-700
           transition
+          duration-200
           hover:bg-slate-50
         "
       >
         ย้อนกลับ
       </button>
     </section>
+
+    <!-- Development info -->
+    <div
+      class="
+        mt-4
+        text-center
+        text-xs
+        text-slate-400
+      "
+    >
+      Herbie Dev Lab
+    </div>
   </div>
 </main>
