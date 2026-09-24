@@ -1,4 +1,11 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
+
+import { finalize } from 'rxjs';
 
 import { LiffService } from '../../services/liff.service';
 import { ChargeService } from '../../services/charge.service';
@@ -9,127 +16,142 @@ import { ChargeService } from '../../services/charge.service';
   templateUrl: './charge.component.html',
 })
 export class ChargeComponent implements OnInit {
-  private readonly liffService = inject(LiffService);
-  private readonly chargeService = inject(ChargeService);
-  readonly amounts = [100, 200, 300, 400, 500, 600];
+  private readonly liffService =
+    inject(LiffService);
 
-  // -------------------------
-  // State
-  // -------------------------
+  private readonly chargeService =
+    inject(ChargeService);
 
-  readonly selectedAmount = signal<number | null>(null);
+  readonly amounts = [
+    100,
+    200,
+    300,
+    400,
+    500,
+    600,
+  ];
 
-  readonly isLiffReady = signal(false);
+  selectedAmount =
+    signal<number | null>(null);
 
-  readonly isInLine = signal(false);
+  isLoading =
+    signal(false);
 
-  readonly isLoggedIn = signal(false);
+  errorMessage =
+    signal<string | null>(null);
 
-  readonly userName = signal<string | null>(null);
+  successMessage =
+    signal<string | null>(null);
 
-  readonly isLoading = signal(false);
-
-  readonly errorMessage = signal<string | null>(null);
-
-  // -------------------------
-  // Lifecycle
-  // -------------------------
+  userName =
+    signal<string | null>(null);
 
   async ngOnInit(): Promise<void> {
-    await this.initializeLiff();
-  }
-
-  // -------------------------
-  // LIFF
-  // -------------------------
-
-  private async initializeLiff(): Promise<void> {
     try {
-      this.errorMessage.set(null);
-
       await this.liffService.init();
 
-      // LIFF init สำเร็จ
-      this.isLiffReady.set(true);
-
-      // ตรวจว่าเปิดอยู่ใน LINE App หรือ browser ปกติ
-      this.isInLine.set(this.liffService.isInClient());
-
-      const loggedIn = this.liffService.isLoggedIn();
-
-      this.isLoggedIn.set(loggedIn);
-
-      // ถ้ายังไม่ login
-      if (!loggedIn) {
+      if (!this.liffService.isLoggedIn()) {
         this.liffService.login();
         return;
       }
 
-      // ดึง LINE Profile
-      const profile = await this.liffService.getProfile();
+      const profile =
+        await this.liffService.getProfile();
 
-      this.userName.set(profile.displayName);
-
-      console.log('LIFF initialized');
-
-      console.log('Is in LINE:', this.isInLine());
-
-      console.log('LINE user:', profile.displayName);
-
-      // ไม่ log ID Token เต็ม ๆ
-      console.log('Has ID Token:', Boolean(this.liffService.getIdToken()));
+      this.userName.set(
+        profile.displayName,
+      );
     } catch (error) {
-      console.error('LIFF initialize error:', error);
+      console.error(
+        'LIFF init error:',
+        error,
+      );
 
-      this.errorMessage.set('ไม่สามารถเชื่อมต่อกับ LINE ได้');
+      this.errorMessage.set(
+        'ไม่สามารถเชื่อมต่อ LINE ได้',
+      );
     }
   }
 
-  // -------------------------
-  // Amount
-  // -------------------------
+  selectAmount(
+    amount: number,
+  ): void {
+    if (this.isLoading()) {
+      return;
+    }
 
-  selectAmount(amount: number): void {
-    this.selectedAmount.set(amount);
+    this.selectedAmount.set(
+      amount,
+    );
+
+    this.errorMessage.set(null);
+    this.successMessage.set(null);
   }
-
-  // -------------------------
-  // Confirm
-  // -------------------------
 
   confirm(): void {
-    const amount = this.selectedAmount();
+    const amount =
+      this.selectedAmount();
 
-    if (amount === null) {
+    if (
+      amount === null ||
+      this.isLoading()
+    ) {
       return;
     }
 
-    const idToken = this.liffService.getIdToken();
+    const idToken =
+      this.liffService.getIdToken();
 
     if (!idToken) {
-      console.error('LINE ID Token not found');
+      this.errorMessage.set(
+        'ไม่พบข้อมูลการเข้าสู่ระบบ LINE',
+      );
 
       return;
     }
 
-    this.chargeService.charge(idToken, amount).subscribe({
-      next: (response) => {
-        console.log('Success:', response);
-      },
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+    this.successMessage.set(null);
 
-      error: (error) => {
-        console.error('Charge error:', error);
-      },
-    });
+    this.chargeService
+      .charge(
+        idToken,
+        amount,
+      )
+      .pipe(
+        finalize(() => {
+          this.isLoading.set(false);
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.successMessage.set(
+            `เติมเครดิต ฿${amount} สำเร็จ`,
+          );
+
+          this.selectedAmount.set(null);
+
+          // ตอนนี้ยังไม่ปิด LIFF ทันที
+          // เพื่อให้เราเห็น success state ก่อน
+        },
+
+        error: (error) => {
+          console.error(
+            'Charge error:',
+            error,
+          );
+
+          this.errorMessage.set(
+            error?.error?.message ??
+              'เกิดข้อผิดพลาด กรุณาลองใหม่',
+          );
+        },
+      });
   }
 
-  // -------------------------
-  // Back
-  // -------------------------
-
   goBack(): void {
-    if (this.liffService.isInClient()) {
-      this.liffService.closeWindow();
+    if (this.isLoading()) {
       return;
     }
 

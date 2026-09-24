@@ -1,230 +1,24 @@
-<main
-  class="
-    min-h-screen
-    bg-slate-100
-    px-4
-    py-6
-  "
->
+<main class="min-h-screen bg-slate-100 px-4 py-6">
   <div class="mx-auto max-w-md">
-
-    <section
-      class="
-        rounded-3xl
-        bg-white
-        p-5
-        shadow-sm
-      "
-    >
-
-      <!-- ========================= -->
+    <section class="rounded-3xl bg-white p-5 shadow-sm">
       <!-- Header -->
-      <!-- ========================= -->
-
       <div>
-        <h1
-          class="
-            text-2xl
-            font-bold
-            text-slate-900
-          "
-        >
+        <h1 class="text-2xl font-bold text-slate-900">
           เติมเครดิต
         </h1>
 
+        <p class="mt-1 text-sm text-slate-500">
+          เลือกจำนวนเงินที่ต้องการเติม
+        </p>
+
         @if (userName()) {
-          <p
-            class="
-              mt-1
-              text-sm
-              text-slate-500
-            "
-          >
+          <p class="mt-2 text-sm font-medium text-emerald-700">
             สวัสดี {{ userName() }}
-          </p>
-        } @else {
-          <p
-            class="
-              mt-1
-              text-sm
-              text-slate-500
-            "
-          >
-            เลือกจำนวนเงินที่ต้องการเติม
           </p>
         }
       </div>
 
-
-      <!-- ========================= -->
-      <!-- LIFF Debug -->
-      <!-- ========================= -->
-
-      <div
-        class="
-          mt-4
-          rounded-xl
-          border
-          border-slate-200
-          bg-slate-50
-          px-4
-          py-3
-        "
-      >
-
-        <!-- LIFF Status -->
-
-        <div
-          class="
-            flex
-            items-center
-            justify-between
-          "
-        >
-          <span
-            class="
-              text-sm
-              text-slate-500
-            "
-          >
-            LIFF Status
-          </span>
-
-          <span
-            class="
-              text-sm
-              font-semibold
-            "
-            [class.text-emerald-600]="
-              isLiffReady()
-            "
-            [class.text-amber-600]="
-              !isLiffReady()
-            "
-          >
-            {{
-              isLiffReady()
-                ? 'Ready'
-                : 'Loading...'
-            }}
-          </span>
-        </div>
-
-
-        <!-- LINE Client -->
-
-        <div
-          class="
-            mt-2
-            flex
-            items-center
-            justify-between
-          "
-        >
-          <span
-            class="
-              text-sm
-              text-slate-500
-            "
-          >
-            เปิดผ่าน LINE
-          </span>
-
-          <span
-            class="
-              text-sm
-              font-semibold
-            "
-            [class.text-emerald-600]="
-              isInLine()
-            "
-            [class.text-slate-500]="
-              !isInLine()
-            "
-          >
-            {{
-              isInLine()
-                ? 'Yes'
-                : 'No'
-            }}
-          </span>
-        </div>
-
-
-        <!-- Login -->
-
-        <div
-          class="
-            mt-2
-            flex
-            items-center
-            justify-between
-          "
-        >
-          <span
-            class="
-              text-sm
-              text-slate-500
-            "
-          >
-            LINE Login
-          </span>
-
-          <span
-            class="
-              text-sm
-              font-semibold
-            "
-            [class.text-emerald-600]="
-              isLoggedIn()
-            "
-            [class.text-amber-600]="
-              !isLoggedIn()
-            "
-          >
-            {{
-              isLoggedIn()
-                ? 'Logged in'
-                : 'Not logged in'
-            }}
-          </span>
-        </div>
-
-      </div>
-
-
-      <!-- ========================= -->
-      <!-- Error -->
-      <!-- ========================= -->
-
-      @if (errorMessage()) {
-        <div
-          class="
-            mt-4
-            rounded-xl
-            border
-            border-red-200
-            bg-red-50
-            px-4
-            py-3
-          "
-        >
-          <p
-            class="
-              text-sm
-              text-red-600
-            "
-          >
-            {{ errorMessage() }}
-          </p>
-        </div>
-      }
-
-
-      <!-- ========================= -->
-      <!-- Credit -->
-      <!-- ========================= -->
-
+      <!-- Credit Card -->
       <div
         class="
           mt-5
@@ -234,43 +28,19 @@
           text-white
         "
       >
-
-        <p
-          class="
-            text-sm
-            text-emerald-50
-          "
-        >
+        <p class="text-sm text-emerald-50">
           เครดิตคงเหลือ
         </p>
 
-        <div
-          class="
-            mt-2
-            flex
-            items-end
-            gap-2
-          "
-        >
-          <strong
-            class="
-              text-4xl
-              font-bold
-            "
-          >
+        <div class="mt-2 flex items-end gap-2">
+          <strong class="text-4xl font-bold">
             100.00
           </strong>
 
-          <span
-            class="
-              pb-1
-              text-sm
-            "
-          >
+          <span class="pb-1 text-sm">
             บาท
           </span>
         </div>
-
 
         <div
           class="
@@ -280,52 +50,25 @@
             pt-3
           "
         >
-          <p
-            class="
-              text-sm
-              text-emerald-50
-            "
-          >
+          <p class="text-sm text-emerald-50">
             เบอร์โทรศัพท์
             099 999 9999
           </p>
         </div>
-
       </div>
 
-
-      <!-- ========================= -->
-      <!-- Amount Title -->
-      <!-- ========================= -->
-
+      <!-- Section Title -->
       <div class="mt-6">
-
-        <h2
-          class="
-            font-semibold
-            text-slate-900
-          "
-        >
+        <h2 class="font-semibold text-slate-900">
           เติมเงินเพื่อเพิ่มยอดเครดิต
         </h2>
 
-        <p
-          class="
-            mt-1
-            text-sm
-            text-slate-500
-          "
-        >
+        <p class="mt-1 text-sm text-slate-500">
           เลือกจำนวนเงินที่ต้องการเติม
         </p>
-
       </div>
 
-
-      <!-- ========================= -->
-      <!-- Amount Options -->
-      <!-- ========================= -->
-
+      <!-- Amount Buttons -->
       <div
         class="
           mt-4
@@ -334,14 +77,13 @@
           gap-3
         "
       >
-
         @for (
           amount of amounts;
           track amount
         ) {
-
           <button
             type="button"
+            [disabled]="isLoading()"
             (click)="selectAmount(amount)"
             class="
               rounded-xl
@@ -351,48 +93,35 @@
               font-semibold
               transition
               duration-200
+              disabled:cursor-not-allowed
+              disabled:opacity-50
             "
-
             [class.border-emerald-700]="
               selectedAmount() === amount
             "
-
             [class.bg-emerald-700]="
               selectedAmount() === amount
             "
-
             [class.text-white]="
               selectedAmount() === amount
             "
-
             [class.border-slate-300]="
               selectedAmount() !== amount
             "
-
             [class.bg-white]="
               selectedAmount() !== amount
             "
-
             [class.text-slate-700]="
               selectedAmount() !== amount
             "
           >
             ฿ {{ amount }}
           </button>
-
         }
-
       </div>
 
-
-      <!-- ========================= -->
       <!-- Selected Amount -->
-      <!-- ========================= -->
-
-      @if (
-        selectedAmount() !== null
-      ) {
-
+      @if (selectedAmount() !== null) {
         <div
           class="
             mt-5
@@ -401,13 +130,7 @@
             p-4
           "
         >
-
-          <p
-            class="
-              text-sm
-              text-emerald-800
-            "
-          >
+          <p class="text-sm text-emerald-700">
             จำนวนเงินที่เลือก
           </p>
 
@@ -421,26 +144,121 @@
           >
             ฿ {{ selectedAmount() }}
           </p>
-
         </div>
-
       }
 
+      <!-- Success Message -->
+      @if (successMessage()) {
+        <div
+          class="
+            mt-5
+            rounded-2xl
+            border
+            border-emerald-200
+            bg-emerald-50
+            p-4
+          "
+        >
+          <div class="flex items-start gap-3">
+            <div
+              class="
+                flex
+                size-8
+                shrink-0
+                items-center
+                justify-center
+                rounded-full
+                bg-emerald-100
+                text-emerald-700
+              "
+            >
+              ✓
+            </div>
 
-      <!-- ========================= -->
-      <!-- Confirm -->
-      <!-- ========================= -->
+            <div>
+              <p
+                class="
+                  font-semibold
+                  text-emerald-900
+                "
+              >
+                สำเร็จ
+              </p>
 
+              <p
+                class="
+                  mt-1
+                  text-sm
+                  text-emerald-700
+                "
+              >
+                {{ successMessage() }}
+              </p>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Error Message -->
+      @if (errorMessage()) {
+        <div
+          class="
+            mt-5
+            rounded-2xl
+            border
+            border-red-200
+            bg-red-50
+            p-4
+          "
+        >
+          <div class="flex items-start gap-3">
+            <div
+              class="
+                flex
+                size-8
+                shrink-0
+                items-center
+                justify-center
+                rounded-full
+                bg-red-100
+                text-red-600
+              "
+            >
+              !
+            </div>
+
+            <div>
+              <p
+                class="
+                  font-semibold
+                  text-red-900
+                "
+              >
+                ทำรายการไม่สำเร็จ
+              </p>
+
+              <p
+                class="
+                  mt-1
+                  text-sm
+                  text-red-600
+                "
+              >
+                {{ errorMessage() }}
+              </p>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Confirm Button -->
       <button
         type="button"
         (click)="confirm()"
-
         [disabled]="
           selectedAmount() === null ||
-          !isLiffReady() ||
           isLoading()
         "
-
         class="
           mt-6
           w-full
@@ -450,32 +268,43 @@
           font-semibold
           text-white
           transition
-          duration-200
-
           hover:bg-emerald-600
-
           disabled:cursor-not-allowed
-          disabled:opacity-40
+          disabled:opacity-50
         "
       >
-
         @if (isLoading()) {
-          กำลังดำเนินการ...
+          <span
+            class="
+              flex
+              items-center
+              justify-center
+              gap-2
+            "
+          >
+            <span
+              class="
+                size-4
+                animate-spin
+                rounded-full
+                border-2
+                border-white/40
+                border-t-white
+              "
+            ></span>
+
+            กำลังดำเนินการ...
+          </span>
         } @else {
           ยืนยัน
         }
-
       </button>
 
-
-      <!-- ========================= -->
-      <!-- Back -->
-      <!-- ========================= -->
-
+      <!-- Back Button -->
       <button
         type="button"
         (click)="goBack()"
-
+        [disabled]="isLoading()"
         class="
           mt-3
           w-full
@@ -487,31 +316,13 @@
           font-semibold
           text-slate-700
           transition
-          duration-200
-
           hover:bg-slate-50
+          disabled:cursor-not-allowed
+          disabled:opacity-50
         "
       >
         ย้อนกลับ
       </button>
-
     </section>
-
-
-    <!-- ========================= -->
-    <!-- Footer -->
-    <!-- ========================= -->
-
-    <div
-      class="
-        mt-4
-        text-center
-        text-xs
-        text-slate-400
-      "
-    >
-      Herbie Dev Lab
-    </div>
-
   </div>
 </main>
