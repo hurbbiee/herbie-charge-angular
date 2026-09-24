@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnInit,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 
 import { finalize } from 'rxjs';
 
@@ -16,35 +11,30 @@ import { ChargeService } from '../../services/charge.service';
   templateUrl: './charge.component.html',
 })
 export class ChargeComponent implements OnInit {
-  private readonly liffService =
-    inject(LiffService);
+  private readonly liffService = inject(LiffService);
 
-  private readonly chargeService =
-    inject(ChargeService);
+  private readonly chargeService = inject(ChargeService);
 
-  readonly amounts = [
-    100,
-    200,
-    300,
-    400,
-    500,
-    600,
-  ];
+  readonly amounts = [100, 200, 300, 400, 500, 600];
 
-  selectedAmount =
-    signal<number | null>(null);
+  // จำนวนเงินที่กำลังเลือก
+  selectedAmount = signal<number | null>(null);
 
-  isLoading =
-    signal(false);
+  // จำนวนเงินที่ทำรายการสำเร็จล่าสุด
+  successAmount = signal<number | null>(null);
 
-  errorMessage =
-    signal<string | null>(null);
+  // Mock credit เริ่มต้น
+  currentBalance = signal(100);
 
-  successMessage =
-    signal<string | null>(null);
+  isLoading = signal(false);
 
-  userName =
-    signal<string | null>(null);
+  errorMessage = signal<string | null>(null);
+
+  successMessage = signal<string | null>(null);
+
+  userName = signal<string | null>(null);
+
+  transactionId = signal<string | null>(null);
 
   async ngOnInit(): Promise<void> {
     try {
@@ -55,57 +45,40 @@ export class ChargeComponent implements OnInit {
         return;
       }
 
-      const profile =
-        await this.liffService.getProfile();
+      const profile = await this.liffService.getProfile();
 
-      this.userName.set(
-        profile.displayName,
-      );
+      this.userName.set(profile.displayName);
     } catch (error) {
-      console.error(
-        'LIFF init error:',
-        error,
-      );
+      console.error('LIFF init error:', error);
 
-      this.errorMessage.set(
-        'ไม่สามารถเชื่อมต่อ LINE ได้',
-      );
+      this.errorMessage.set('ไม่สามารถเชื่อมต่อ LINE ได้');
     }
   }
 
-  selectAmount(
-    amount: number,
-  ): void {
+  selectAmount(amount: number): void {
     if (this.isLoading()) {
       return;
     }
 
-    this.selectedAmount.set(
-      amount,
-    );
+    this.selectedAmount.set(amount);
 
-    this.errorMessage.set(null);
+    // เลือกใหม่แล้วซ่อนผลลัพธ์เก่า
+    this.successAmount.set(null);
     this.successMessage.set(null);
+    this.errorMessage.set(null);
   }
 
   confirm(): void {
-    const amount =
-      this.selectedAmount();
+    const amount = this.selectedAmount();
 
-    if (
-      amount === null ||
-      this.isLoading()
-    ) {
+    if (amount === null || this.isLoading()) {
       return;
     }
 
-    const idToken =
-      this.liffService.getIdToken();
+    const idToken = this.liffService.getIdToken();
 
     if (!idToken) {
-      this.errorMessage.set(
-        'ไม่พบข้อมูลการเข้าสู่ระบบ LINE',
-      );
+      this.errorMessage.set('ไม่พบข้อมูลการเข้าสู่ระบบ LINE');
 
       return;
     }
@@ -113,39 +86,34 @@ export class ChargeComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set(null);
     this.successMessage.set(null);
+    this.successAmount.set(null);
 
     this.chargeService
-      .charge(
-        idToken,
-        amount,
-      )
+      .charge(idToken, amount)
       .pipe(
         finalize(() => {
           this.isLoading.set(false);
         }),
       )
       .subscribe({
-        next: () => {
-          this.successMessage.set(
-            `เติมเครดิต ฿${amount} สำเร็จ`,
-          );
+        next: (response) => {
+          const result = response.data;
+
+          this.successAmount.set(result.amount);
+
+          this.currentBalance.set(result.balance);
+
+          this.transactionId.set(result.transactionId);
+
+          this.successMessage.set(response.message);
 
           this.selectedAmount.set(null);
-
-          // ตอนนี้ยังไม่ปิด LIFF ทันที
-          // เพื่อให้เราเห็น success state ก่อน
         },
 
         error: (error) => {
-          console.error(
-            'Charge error:',
-            error,
-          );
+          console.error('Charge error:', error);
 
-          this.errorMessage.set(
-            error?.error?.message ??
-              'เกิดข้อผิดพลาด กรุณาลองใหม่',
-          );
+          this.errorMessage.set(error?.error?.message ?? 'เกิดข้อผิดพลาด กรุณาลองใหม่');
         },
       });
   }
