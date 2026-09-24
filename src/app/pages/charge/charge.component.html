@@ -1,24 +1,65 @@
-<main class="min-h-screen bg-slate-100 px-4 py-6">
+<main
+  class="
+    min-h-screen
+    bg-slate-100
+    px-4
+    py-6
+  "
+>
   <div class="mx-auto max-w-md">
-    <section class="rounded-3xl bg-white p-5 shadow-sm">
+
+    <section
+      class="
+        rounded-3xl
+        bg-white
+        p-5
+        shadow-sm
+      "
+    >
+
+      <!-- ========================= -->
       <!-- Header -->
+      <!-- ========================= -->
+
       <div>
-        <h1 class="text-2xl font-bold text-slate-900">
+        <h1
+          class="
+            text-2xl
+            font-bold
+            text-slate-900
+          "
+        >
           เติมเครดิต
         </h1>
 
-        @if (userName) {
-          <p class="mt-1 text-sm text-slate-500">
-            สวัสดี {{ userName }}
+        @if (userName()) {
+          <p
+            class="
+              mt-1
+              text-sm
+              text-slate-500
+            "
+          >
+            สวัสดี {{ userName() }}
           </p>
         } @else {
-          <p class="mt-1 text-sm text-slate-500">
+          <p
+            class="
+              mt-1
+              text-sm
+              text-slate-500
+            "
+          >
             เลือกจำนวนเงินที่ต้องการเติม
           </p>
         }
       </div>
 
-      <!-- LIFF debug status -->
+
+      <!-- ========================= -->
+      <!-- LIFF Debug -->
+      <!-- ========================= -->
+
       <div
         class="
           mt-4
@@ -30,36 +71,160 @@
           py-3
         "
       >
-        <div class="flex items-center justify-between">
-          <span class="text-sm text-slate-500">
+
+        <!-- LIFF Status -->
+
+        <div
+          class="
+            flex
+            items-center
+            justify-between
+          "
+        >
+          <span
+            class="
+              text-sm
+              text-slate-500
+            "
+          >
             LIFF Status
           </span>
 
           <span
-            class="text-sm font-semibold"
-            [class.text-emerald-600]="isLiffReady"
-            [class.text-amber-600]="!isLiffReady"
+            class="
+              text-sm
+              font-semibold
+            "
+            [class.text-emerald-600]="
+              isLiffReady()
+            "
+            [class.text-amber-600]="
+              !isLiffReady()
+            "
           >
-            {{ isLiffReady ? 'Ready' : 'Loading...' }}
+            {{
+              isLiffReady()
+                ? 'Ready'
+                : 'Loading...'
+            }}
           </span>
         </div>
 
-        <div class="mt-2 flex items-center justify-between">
-          <span class="text-sm text-slate-500">
+
+        <!-- LINE Client -->
+
+        <div
+          class="
+            mt-2
+            flex
+            items-center
+            justify-between
+          "
+        >
+          <span
+            class="
+              text-sm
+              text-slate-500
+            "
+          >
             เปิดผ่าน LINE
           </span>
 
           <span
-            class="text-sm font-semibold"
-            [class.text-emerald-600]="isInLine"
-            [class.text-slate-500]="!isInLine"
+            class="
+              text-sm
+              font-semibold
+            "
+            [class.text-emerald-600]="
+              isInLine()
+            "
+            [class.text-slate-500]="
+              !isInLine()
+            "
           >
-            {{ isInLine ? 'Yes' : 'No' }}
+            {{
+              isInLine()
+                ? 'Yes'
+                : 'No'
+            }}
           </span>
         </div>
+
+
+        <!-- Login -->
+
+        <div
+          class="
+            mt-2
+            flex
+            items-center
+            justify-between
+          "
+        >
+          <span
+            class="
+              text-sm
+              text-slate-500
+            "
+          >
+            LINE Login
+          </span>
+
+          <span
+            class="
+              text-sm
+              font-semibold
+            "
+            [class.text-emerald-600]="
+              isLoggedIn()
+            "
+            [class.text-amber-600]="
+              !isLoggedIn()
+            "
+          >
+            {{
+              isLoggedIn()
+                ? 'Logged in'
+                : 'Not logged in'
+            }}
+          </span>
+        </div>
+
       </div>
 
-      <!-- Credit card -->
+
+      <!-- ========================= -->
+      <!-- Error -->
+      <!-- ========================= -->
+
+      @if (errorMessage()) {
+        <div
+          class="
+            mt-4
+            rounded-xl
+            border
+            border-red-200
+            bg-red-50
+            px-4
+            py-3
+          "
+        >
+          <p
+            class="
+              text-sm
+              text-red-600
+            "
+          >
+            {{ errorMessage() }}
+          </p>
+        </div>
+      }
+
+
+      <!-- ========================= -->
+      <!-- Credit -->
+      <!-- ========================= -->
+
       <div
         class="
           mt-5
@@ -69,19 +234,43 @@
           text-white
         "
       >
-        <p class="text-sm text-emerald-50">
+
+        <p
+          class="
+            text-sm
+            text-emerald-50
+          "
+        >
           เครดิตคงเหลือ
         </p>
 
-        <div class="mt-2 flex items-end gap-2">
-          <strong class="text-4xl font-bold">
+        <div
+          class="
+            mt-2
+            flex
+            items-end
+            gap-2
+          "
+        >
+          <strong
+            class="
+              text-4xl
+              font-bold
+            "
+          >
             100.00
           </strong>
 
-          <span class="pb-1 text-sm">
+          <span
+            class="
+              pb-1
+              text-sm
+            "
+          >
             บาท
           </span>
         </div>
+
 
         <div
           class="
@@ -91,30 +280,66 @@
             pt-3
           "
         >
-          <p class="text-sm text-emerald-50">
+          <p
+            class="
+              text-sm
+              text-emerald-50
+            "
+          >
             เบอร์โทรศัพท์
             099 999 9999
           </p>
         </div>
+
       </div>
 
-      <!-- Amount section -->
+
+      <!-- ========================= -->
+      <!-- Amount Title -->
+      <!-- ========================= -->
+
       <div class="mt-6">
-        <h2 class="font-semibold text-slate-900">
+
+        <h2
+          class="
+            font-semibold
+            text-slate-900
+          "
+        >
           เติมเงินเพื่อเพิ่มยอดเครดิต
         </h2>
 
-        <p class="mt-1 text-sm text-slate-500">
+        <p
+          class="
+            mt-1
+            text-sm
+            text-slate-500
+          "
+        >
           เลือกจำนวนเงินที่ต้องการเติม
         </p>
+
       </div>
 
-      <!-- Amount buttons -->
-      <div class="mt-4 grid grid-cols-2 gap-3">
+
+      <!-- ========================= -->
+      <!-- Amount Options -->
+      <!-- ========================= -->
+
+      <div
+        class="
+          mt-4
+          grid
+          grid-cols-2
+          gap-3
+        "
+      >
+
         @for (
           amount of amounts;
           track amount
         ) {
+
           <button
             type="button"
             (click)="selectAmount(amount)"
@@ -127,32 +352,47 @@
               transition
               duration-200
             "
+
             [class.border-emerald-700]="
-              selectedAmount === amount
+              selectedAmount() === amount
             "
+
             [class.bg-emerald-700]="
-              selectedAmount === amount
+              selectedAmount() === amount
             "
+
             [class.text-white]="
-              selectedAmount === amount
+              selectedAmount() === amount
             "
+
             [class.border-slate-300]="
-              selectedAmount !== amount
+              selectedAmount() !== amount
             "
+
             [class.bg-white]="
-              selectedAmount !== amount
+              selectedAmount() !== amount
             "
+
             [class.text-slate-700]="
-              selectedAmount !== amount
+              selectedAmount() !== amount
             "
           >
             ฿ {{ amount }}
           </button>
+
         }
+
       </div>
 
-      <!-- Selected amount -->
-      @if (selectedAmount !== null) {
+
+      <!-- ========================= -->
+      <!-- Selected Amount -->
+      <!-- ========================= -->
+
+      @if (
+        selectedAmount() !== null
+      ) {
+
         <div
           class="
             mt-5
@@ -161,7 +401,13 @@
             p-4
           "
         >
-          <p class="text-sm text-emerald-800">
+
+          <p
+            class="
+              text-sm
+              text-emerald-800
+            "
+          >
             จำนวนเงินที่เลือก
           </p>
 
@@ -173,19 +419,28 @@
               text-emerald-900
             "
           >
-            ฿ {{ selectedAmount }}
+            ฿ {{ selectedAmount() }}
           </p>
+
         </div>
+
       }
 
-      <!-- Confirm button -->
+
+      <!-- ========================= -->
+      <!-- Confirm -->
+      <!-- ========================= -->
+
       <button
         type="button"
         (click)="confirm()"
+
         [disabled]="
-          selectedAmount === null ||
-          !isLiffReady
+          selectedAmount() === null ||
+          !isLiffReady() ||
+          isLoading()
         "
+
         class="
           mt-6
           w-full
@@ -196,18 +451,31 @@
           text-white
           transition
           duration-200
+
           hover:bg-emerald-600
+
           disabled:cursor-not-allowed
           disabled:opacity-40
         "
       >
-        ยืนยัน
+
+        @if (isLoading()) {
+          กำลังดำเนินการ...
+        } @else {
+          ยืนยัน
+        }
+
       </button>
 
-      <!-- Back button -->
+
+      <!-- ========================= -->
+      <!-- Back -->
+      <!-- ========================= -->
+
       <button
         type="button"
         (click)="goBack()"
+
         class="
           mt-3
           w-full
@@ -220,14 +488,20 @@
           text-slate-700
           transition
           duration-200
+
           hover:bg-slate-50
         "
       >
         ย้อนกลับ
       </button>
+
     </section>
 
-    <!-- Development info -->
+
+    <!-- ========================= -->
+    <!-- Footer -->
+    <!-- ========================= -->
+
     <div
       class="
         mt-4
@@ -238,5 +512,6 @@
     >
       Herbie Dev Lab
     </div>
+
   </div>
 </main>
