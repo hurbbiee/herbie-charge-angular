@@ -1,11 +1,7 @@
-import {
-  Component,
-  OnInit,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 
 import { LiffService } from '../../services/liff.service';
+import { ChargeService } from '../../services/charge.service';
 
 @Component({
   selector: 'app-charge',
@@ -14,15 +10,8 @@ import { LiffService } from '../../services/liff.service';
 })
 export class ChargeComponent implements OnInit {
   private readonly liffService = inject(LiffService);
-
-  readonly amounts = [
-    100,
-    200,
-    300,
-    400,
-    500,
-    600,
-  ];
+  private readonly chargeService = inject(ChargeService);
+  readonly amounts = [100, 200, 300, 400, 500, 600];
 
   // -------------------------
   // State
@@ -64,12 +53,9 @@ export class ChargeComponent implements OnInit {
       this.isLiffReady.set(true);
 
       // ตรวจว่าเปิดอยู่ใน LINE App หรือ browser ปกติ
-      this.isInLine.set(
-        this.liffService.isInClient(),
-      );
+      this.isInLine.set(this.liffService.isInClient());
 
-      const loggedIn =
-        this.liffService.isLoggedIn();
+      const loggedIn = this.liffService.isLoggedIn();
 
       this.isLoggedIn.set(loggedIn);
 
@@ -80,41 +66,22 @@ export class ChargeComponent implements OnInit {
       }
 
       // ดึง LINE Profile
-      const profile =
-        await this.liffService.getProfile();
+      const profile = await this.liffService.getProfile();
 
-      this.userName.set(
-        profile.displayName,
-      );
+      this.userName.set(profile.displayName);
 
       console.log('LIFF initialized');
 
-      console.log(
-        'Is in LINE:',
-        this.isInLine(),
-      );
+      console.log('Is in LINE:', this.isInLine());
 
-      console.log(
-        'LINE user:',
-        profile.displayName,
-      );
+      console.log('LINE user:', profile.displayName);
 
       // ไม่ log ID Token เต็ม ๆ
-      console.log(
-        'Has ID Token:',
-        Boolean(
-          this.liffService.getIdToken(),
-        ),
-      );
+      console.log('Has ID Token:', Boolean(this.liffService.getIdToken()));
     } catch (error) {
-      console.error(
-        'LIFF initialize error:',
-        error,
-      );
+      console.error('LIFF initialize error:', error);
 
-      this.errorMessage.set(
-        'ไม่สามารถเชื่อมต่อกับ LINE ได้',
-      );
+      this.errorMessage.set('ไม่สามารถเชื่อมต่อกับ LINE ได้');
     }
   }
 
@@ -131,54 +98,29 @@ export class ChargeComponent implements OnInit {
   // -------------------------
 
   confirm(): void {
-    const amount =
-      this.selectedAmount();
+    const amount = this.selectedAmount();
 
     if (amount === null) {
       return;
     }
 
-    if (!this.isLiffReady()) {
-      return;
-    }
-
-    const idToken =
-      this.liffService.getIdToken();
+    const idToken = this.liffService.getIdToken();
 
     if (!idToken) {
-      this.errorMessage.set(
-        'ไม่พบข้อมูลการเข้าสู่ระบบ LINE',
-      );
+      console.error('LINE ID Token not found');
 
       return;
     }
 
-    this.errorMessage.set(null);
+    this.chargeService.charge(idToken, amount).subscribe({
+      next: (response) => {
+        console.log('Success:', response);
+      },
 
-    console.log(
-      'Selected amount:',
-      amount,
-    );
-
-    console.log(
-      'Has ID Token:',
-      Boolean(idToken),
-    );
-
-    /*
-     * STEP ถัดไป:
-     *
-     * Angular จะส่ง:
-     *
-     * {
-     *   idToken,
-     *   amount
-     * }
-     *
-     * ไปยัง Java Spring Boot
-     *
-     * ยังไม่ทำ API ในขั้นนี้
-     */
+      error: (error) => {
+        console.error('Charge error:', error);
+      },
+    });
   }
 
   // -------------------------
